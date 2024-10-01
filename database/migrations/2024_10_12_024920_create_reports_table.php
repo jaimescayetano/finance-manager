@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->char('type', 1);
-            $table->strig('format'); // PDF 
+            $table->string('format'); // PDF 
             $table->date('start_date');
             $table->date('end_date');
             $table->foreignId('user_id')->constrained();
@@ -29,6 +29,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('reports_categories');
         Schema::dropIfExists('reports');
     }
 };
