@@ -9,7 +9,11 @@ class Expense extends Model
 {
     use HasFactory;
 
+    const TYPE_PROGRAMMED = 'P';
+    const TYPE_REGULAR = 'R';
+
     protected $fillable = [
+        'title',
         'amount',
         'description',
         'date',

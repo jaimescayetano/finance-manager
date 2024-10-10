@@ -9,7 +9,12 @@ class IncomeSource extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'icon_svg'];
+    protected $fillable = ['title', 'description', 'icon_svg', 'user_id'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function incomes()
     {
