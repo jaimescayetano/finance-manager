@@ -16,6 +16,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Tables\Columns\ColorColumn;
 
 class CategoryResource extends Resource
 {
@@ -36,6 +38,9 @@ class CategoryResource extends Resource
                     ->label('Icon'),
                 Textarea::make('description')
                     ->label('Description')
+                    ->columnSpan(2),
+                ColorPicker::make('color')
+                    ->label('Color')
                     ->columnSpan(2)
             ])->columns(2);
     }
@@ -49,7 +54,7 @@ class CategoryResource extends Resource
                     ->searchable(),
                 IconColumn::make('icon_svg')
                     ->label('Icon')
-                    ->icon(function(string $state) {
+                    ->icon(function (string $state) {
                         try {
                             svg($state);
                             return $state;
@@ -59,6 +64,7 @@ class CategoryResource extends Resource
                     })
                     ->color('success')
                     ->size(IconColumn\IconColumnSize::Medium),
+                ColorColumn::make('color'),
                 TextColumn::make('created_at')
                     ->label('Created at'),
             ])
