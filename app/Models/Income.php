@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Income extends Model
 {
+    const TYPE_ACTION = 'I';
+
     use HasFactory;
 
     protected $fillable = [

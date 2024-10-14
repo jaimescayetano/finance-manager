@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use App\Observers\ExpenseObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ExpenseObserver::class])]
 class Expense extends Model
 {
     use HasFactory;
 
+    const TYPE_ACTION = 'E';
     const TYPE_PROGRAMMED = 'P';
     const TYPE_REGULAR = 'R';
 
