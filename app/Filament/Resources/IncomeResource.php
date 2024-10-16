@@ -23,7 +23,7 @@ class IncomeResource extends Resource
 {
     protected static ?string $model = Income::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-m-arrow-trending-up';
 
     protected static ?string $navigationGroup = 'Configurations';
     
@@ -61,6 +61,7 @@ class IncomeResource extends Resource
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar'),
             ])
+            ->defaultSort('date', 'desc')
             ->filters([
                 //
             ])

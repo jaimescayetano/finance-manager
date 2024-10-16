@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Utils\HistogramData;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Income extends Model
 {
-    const TYPE_ACTION = 'I';
-
     use HasFactory;
+    use HistogramData;
+    
+    const TYPE_ACTION = 'I';
 
     protected $fillable = [
         'amount',
@@ -18,6 +21,12 @@ class Income extends Model
         'income_source_id',
         'user_id',
     ];
+
+    # Todo: Create an entity in charge of generating statistical data
+    public static function getIncomeHistogramData(): array
+    {
+        return self::getHistogramData('incomes');
+    }
 
     public function user()
     {
