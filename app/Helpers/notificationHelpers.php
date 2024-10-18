@@ -20,6 +20,6 @@ if (!function_exists('send_notification')) {
                 break;
         }
 
-        return $notification;
+        return $notification->send();
     }
 }
