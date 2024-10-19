@@ -81,6 +81,7 @@ class ExpenseResource extends Resource
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
