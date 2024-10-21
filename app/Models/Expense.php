@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Utils\HistogramData;
+use App\Models\Utils\StatisticalData;
 use App\Observers\ExpenseObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Expense extends Model
 {
     use HasFactory;
     use HistogramData;
+    use StatisticalData;
 
     const TYPE_ACTION = 'E';
     const TYPE_PROGRAMMED = 'P';

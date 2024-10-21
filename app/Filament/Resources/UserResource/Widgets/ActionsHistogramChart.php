@@ -19,14 +19,14 @@ class ActionsHistogramChart extends ChartWidget
                 [
                     'label' => 'Registered income',
                     'data' => Income::getIncomeHistogramData(),
-                    'backgroundColor' => 'green',
-                    'borderColor' => 'green',
+                    'backgroundColor' => ' #74fe00',
+                    'borderColor' => ' #74fe00',
                 ],
                 [
                     'label' => 'Registered expense',
                     'data' => Expense::getExpenseHistogramData(),
-                    'backgroundColor' => 'red',
-                    'borderColor' => 'red',
+                    'backgroundColor' => '#c61af8',
+                    'borderColor' => '#c61af8',
                 ]
             ],
             'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
