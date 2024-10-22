@@ -26,6 +26,7 @@ class LatestTransactions extends BaseWidget
             )
             ->columns([
                 TextColumn::make('amount')
+                    ->searchable()
                     ->icon('heroicon-o-currency-dollar'),
                 TextColumn::make('message'),
                 TextColumn::make('status')
@@ -46,6 +47,6 @@ class LatestTransactions extends BaseWidget
                     }),
                 TextColumn::make('created_at')
                     ->icon('heroicon-s-calendar'),
-            ]);
+            ])->defaultSort('created_at', 'desc');
     }
 }

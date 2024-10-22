@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Models\Utils\HistogramData;
 use App\Models\Utils\StatisticalData;
+use App\Observers\IncomeObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([IncomeObserver::class])]
 class Income extends Model
 {
     use HasFactory;
