@@ -1,5 +1,9 @@
 # Finance Manager - Deployment Guide
 
+![Dashboard](https://raw.githubusercontent.com/jaimescayetano/images/refs/heads/main/proyects/dashboard-01.png)
+
+![Dashboard](https://raw.githubusercontent.com/jaimescayetano/images/refs/heads/main/proyects/dashboard-02.png)
+
 This guide will walk you through the steps to deploy the Finance Manager application locally.
 
 Clone the repository to your local machine:
