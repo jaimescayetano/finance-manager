@@ -8,6 +8,7 @@ use App\Models\Income;
 use App\Models\IncomeSource;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -26,7 +27,7 @@ class IncomeResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-m-arrow-trending-up';
 
     protected static ?string $navigationGroup = 'Configurations';
-    
+
     public static function form(Form $form): Form
     {
         return $form
@@ -43,7 +44,15 @@ class IncomeResource extends Resource
                     ->readOnly(),
                 Select::make('income_source_id')
                     ->label('Income source')
-                    ->options(IncomeSource::all()->pluck('title', 'id')->toArray())
+                    ->relationship(name: 'incomeSource', titleAttribute: 'title')
+                    ->createOptionForm([
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->required(),
+                        Hidden::make('user_id')
+                            ->default(auth()->id())
+                    ])
+                    ->preload()
                     ->searchable()
                     ->required()
             ]);

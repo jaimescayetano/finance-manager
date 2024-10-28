@@ -6,8 +6,10 @@ use App\Filament\Resources\ExpenseResource\Pages;
 use App\Filament\Resources\ExpenseResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Expense;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -19,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -46,7 +49,15 @@ class ExpenseResource extends Resource
                     ->readOnly(fn(Get $get) => $get('type') === Expense::TYPE_REGULAR),
                 Select::make('category_id')
                     ->label('Category')
-                    ->options(Category::all()->pluck('title', 'id')->toArray())
+                    ->relationship(name: 'category', titleAttribute: 'title')
+                    ->createOptionForm([
+                        TextInput::make('title')
+                            ->label('Title')
+                            ->required(),
+                        Hidden::make('user_id')
+                            ->default(auth()->id())
+                    ])
+                    ->preload()
                     ->searchable()
                     ->required(),
                 Radio::make('type')
@@ -78,7 +89,7 @@ class ExpenseResource extends Resource
                     })
                     ->color('success'),
                 TextColumn::make('category.title'),
-                TextColumn::make('date')
+                TextColumn::make('created_at')
                     ->icon('heroicon-o-calendar'),
             ])
             ->defaultSort('created_at', 'desc')
