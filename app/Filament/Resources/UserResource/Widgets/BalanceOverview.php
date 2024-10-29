@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Widgets;
 
+use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -19,12 +20,12 @@ class BalanceOverview extends BaseWidget
                 ->description('7% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger'),
-            Stat::make('Incomes', '3:12')
+            Stat::make('Incomes', '25%')
                 ->description('3% increase')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            Stat::make('Savings', '3:12')
-                ->description('3% increase')
+            Stat::make('Savings', auth()->user()->savings ?? 0)
+                ->description('Saved')
                 ->descriptionIcon('heroicon-o-star')
                 ->color('primary'),
         ];

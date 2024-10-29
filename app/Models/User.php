@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    const TABLE_NAME = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -24,6 +27,14 @@ class User extends Authenticatable
         'password',
         'balance'
     ];
+
+    public static function applySaving(float $amount): array
+    {
+        $expenseResponse = self::applyExpense($amount);
+        if (!$expenseResponse['status']) return $expenseResponse;
+
+        return self::updateSavings(auth()->id(), $amount, 'Savings updated correctly');
+    }
 
     public static function applyExpense(float $amount): array
     {
@@ -59,17 +70,34 @@ class User extends Authenticatable
         return self::updateBalance($userId, $amount, 'Income successfully registered');
     }
 
+    private static function updateSavings(int $userId, float $amount, string $successMessage): array
+    {
+        return self::updateMoney($userId, $amount, $successMessage, 'savings');
+    }
+
     private static function updateBalance(int $userId, float $amount, string $successMessage): array
     {
-        $newBalance = DB::transaction(function () use ($userId, $amount) {
+        return self::updateMoney($userId, $amount, $successMessage, 'balance');
+    }
+
+    private static function updateMoney(int $userId, float $amount, string $successMessage, string $type): array
+    {
+        if (!Schema::hasColumn(self::TABLE_NAME, $type)) {
+            return [
+                'status' => false,
+                'message' => 'Invalid operation'
+            ];
+        }
+
+        $newBalance = DB::transaction(function () use ($userId, $amount, $type) {
             $user = DB::table('users')->where('id', $userId)->lockForUpdate()->first();
 
-            $currentBalance = round($user->balance, 2);
-            $updatedBalance = round($currentBalance + $amount, 2);
+            $current = round($user->$type, 2);
+            $updated = round($current + $amount, 2);
 
-            DB::table('users')->where('id', $userId)->update(['balance' => $updatedBalance]);
+            DB::table('users')->where('id', $userId)->update([$type => $updated]);
 
-            return $updatedBalance;
+            return $updated;
         });
 
         return [
@@ -78,7 +106,6 @@ class User extends Authenticatable
             'balance' => $newBalance,
         ];
     }
-
 
     /**
      * The attributes that should be hidden for serialization.
@@ -126,5 +153,10 @@ class User extends Authenticatable
     public function actionTracking()
     {
         return $this->hasMany(ActionTracking::class);
+    }
+
+    public function savings()
+    {
+        return $this->hasMany(Saving::class);
     }
 }

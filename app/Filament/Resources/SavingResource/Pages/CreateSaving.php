@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\ExpenseResource\Pages;
+namespace App\Filament\Resources\SavingResource\Pages;
 
-use App\Filament\Resources\ExpenseResource;
+use App\Filament\Resources\SavingResource;
 use App\Models\User;
 use Filament\Actions;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Notifications\Notification;
 
-class CreateExpense extends CreateRecord
+class CreateSaving extends CreateRecord
 {
-    protected static string $resource = ExpenseResource::class;
+    protected static string $resource = SavingResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -26,8 +26,8 @@ class CreateExpense extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $response = User::applyExpense($data['amount'] ?? 0);
-        
+        $response = User::applySaving($data['amount'] ?? 0);
+    
         send_notification(
             $response['message'],
             $response['status'] ? 1 : 0
