@@ -13,12 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        if (!User::where('email', '=', 'admin@gmail.com')->exists()) {
-            User::create([
-                'name' => 'admin',
-                'email' => 'admin@gmail.com',
-                'password' => Hash::make('password')
-            ]);
-        }
+        $this->call(UserSeeder::class);
+        $this->call(CategorySeeder::class);
+        $this->call(IncomeSourceSeeder::class);
+        $this->call(IncomeSeeder::class);
+        $this->call(SavingSeeder::class);
+        $this->call(ExpenseSeeder::class);
     }
 }

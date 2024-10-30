@@ -25,7 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'balance'
+        'balance',
+        'savings'
     ];
 
     public static function applySaving(float $amount): array
