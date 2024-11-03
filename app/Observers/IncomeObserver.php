@@ -7,7 +7,6 @@ use App\Models\Income;
 
 class IncomeObserver
 {
-    const CREATED_SUCCESS_MESSAGE = 'The transaction was completed successfully';
     const CREATED_SUCESS_STATUS = 'S';
     const CREATED_WRONG_STATUS = 'W';
 
@@ -16,8 +15,8 @@ class IncomeObserver
      */
     public function created(Income $income): void
     {
-        ActionTracking::create([
-            'message' => self::CREATED_SUCCESS_MESSAGE,
+        ActionTracking::create(attributes: [
+            'message' => __('messages.success.income_saved'),
             'amount' => $income->amount,
             'status' => self::CREATED_SUCESS_STATUS,
             'type' => Income::TYPE_ACTION,
@@ -30,7 +29,13 @@ class IncomeObserver
      */
     public function updated(Income $income): void
     {
-        //
+        ActionTracking::create([
+            'message' => __('messages.success.income_updated'),
+            'amount' => $income->amount,
+            'status' => self::CREATED_SUCESS_STATUS,
+            'type' => Income::TYPE_ACTION,
+            'user_id' => auth()->id()
+        ]);
     }
 
     /**
@@ -38,7 +43,13 @@ class IncomeObserver
      */
     public function deleted(Income $income): void
     {
-        //
+        ActionTracking::create([
+            'message' => __('messages.success.income_deleted'),
+            'amount' => $income->amount,
+            'status' => self::CREATED_SUCESS_STATUS,
+            'type' => Income::TYPE_ACTION,
+            'user_id' => auth()->id()
+        ]);
     }
 
     /**

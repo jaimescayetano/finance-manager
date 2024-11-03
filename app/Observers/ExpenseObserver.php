@@ -7,7 +7,6 @@ use App\Models\Expense;
 
 class ExpenseObserver
 {
-    const CREATED_SUCCESS_MESSAGE = 'The transaction was completed successfully';
     const CREATED_SUCESS_STATUS = 'S';
     const CREATED_WRONG_STATUS = 'W';
 
@@ -17,7 +16,7 @@ class ExpenseObserver
     public function created(Expense $expense): void
     {
         ActionTracking::create([
-            'message' => self::CREATED_SUCCESS_MESSAGE,
+            'message' => __('messages.success.expense_saved'),
             'amount' => $expense->amount,
             'status' => self::CREATED_SUCESS_STATUS,
             'type' => Expense::TYPE_ACTION,
@@ -30,7 +29,13 @@ class ExpenseObserver
      */
     public function updated(Expense $expense): void
     {
-        //
+        ActionTracking::create([
+            'message' => __('messages.success.expense_saved'),
+            'amount' => $expense->amount,
+            'status' => self::CREATED_SUCESS_STATUS,
+            'type' => Expense::TYPE_ACTION,
+            'user_id' => auth()->id()
+        ]);
     }
 
     /**
@@ -38,7 +43,13 @@ class ExpenseObserver
      */
     public function deleted(Expense $expense): void
     {
-        //
+        ActionTracking::create([
+            'message' => __('messages.success.expense_saved'),
+            'amount' => $expense->amount,
+            'status' => self::CREATED_SUCESS_STATUS,
+            'type' => Expense::TYPE_ACTION,
+            'user_id' => auth()->id()
+        ]);
     }
 
     /**
