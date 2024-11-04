@@ -6,13 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Utils\HistogramData;
+use App\Observers\SavingsObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([SavingsObserver::class])]
 class Saving extends Model
 {
     use HasFactory;
     use HistogramData;
 
     const TABLE_NAME = 'savings';
+    const TYPE_ACTION = 'S';
 
     protected $fillable = [
         'title',

@@ -5,13 +5,15 @@ namespace App\Filament\Resources\UserResource\Widgets;
 use App\Models\Expense;
 use App\Models\Income;
 use App\Models\Saving;
+use App\Services\Finance\ExpenseService;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
 class ActionsHistogramChart extends ChartWidget
 {
     protected static ?string $heading = 'Expense/Income';
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = 1;
+    protected static ?int $sort = 2;
 
     protected function getData(): array
     {

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\UserResource\Widgets;
 use App\Models\ActionTracking;
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Saving;
 use App\Observers\ExpenseObserver;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -16,6 +17,7 @@ class LatestTransactions extends BaseWidget
 {
     protected static ?string $heading = 'Last actions';
     protected int | string | array $columnSpan = 'full';
+    protected static ?int $sort = 4;
 
     public function table(Table $table): Table
     {
@@ -44,6 +46,7 @@ class LatestTransactions extends BaseWidget
                     ->formatStateUsing(fn(string $state): string => match ($state) {
                         Expense::TYPE_ACTION => 'Expense',
                         Income::TYPE_ACTION => 'Income',
+                        Saving::TYPE_ACTION => 'Saving',
                     }),
                 TextColumn::make('created_at')
                     ->icon('heroicon-s-calendar'),
