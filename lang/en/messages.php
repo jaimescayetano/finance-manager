@@ -17,5 +17,7 @@ return [
         'savings_saved' => 'Savings successfully recorded.',
         'savings_updated' => 'Savings record updated successfully.',
         'savings_deleted' => 'Savings record deleted successfully.',
+
+        'balance_saved' => 'Balance successfully recorded.',
     ],
 ];

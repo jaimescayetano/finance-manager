@@ -4,6 +4,7 @@ namespace App\Filament\Resources\SavingResource\Pages;
 
 use App\Filament\Resources\SavingResource;
 use App\Models\User;
+use App\Services\Finance\SavingsService;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,8 @@ class CreateSaving extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $response = User::applySaving($data['amount'] ?? 0);
+        $userId = auth()->id();
+        $response = SavingsService::create($userId, $data['amount'] ?? 0);
     
         send_notification(
             $response['message'],

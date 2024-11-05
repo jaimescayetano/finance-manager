@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SavingResource\Pages;
 use App\Filament\Resources\SavingResource\RelationManagers;
 use App\Models\Saving;
+use App\Services\Finance\SavingsService;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -13,6 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SavingResource extends Resource
@@ -50,13 +52,25 @@ class SavingResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->action(fn($record) => self::deleteRecords([$record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(fn($records) => self::deleteRecords($records)),
                 ]),
             ]);
+    }
+
+    public static function deleteRecords(array|Collection $records): void
+    {
+        $userId = auth()->id();
+        foreach ($records as $record) {
+            $savingId = $record->id;
+            $response = SavingsService::delete($userId, $savingId);
+            send_notification($response['message'], $response['status'] ? 1 : 0);
+        }
     }
 
     public static function getRelations(): array

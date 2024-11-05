@@ -3,28 +3,58 @@
 namespace App\Services\Finance;
 
 use App\Models\Saving;
+use App\Models\User;
 use App\Services\Finance\Utils\ITransaction;
 
 class SavingsService implements ITransaction
 {
+    const TABLE_NAME = 'savings';
+
     public static function read(): array
     {
         return [];
     }
 
-    public static function create(): array
+    public static function create(int $userId, float $amount): array
+    {
+        $expenseResponse = User::applyExpense($amount);
+        if (!$expenseResponse['status']) return $expenseResponse;
+
+        return TransactionService::updateMoney(
+            $userId,
+            $amount,
+            __('messages.success.savings_updated'),
+            self::TABLE_NAME
+        );
+    }
+
+    public static function update(int $userId, int $transactionId, array $data): array
     {
         return [];
     }
 
-    public static function update(): array
+    public static function delete(int $userId, int $transactionId): array
     {
-        return [];
-    }
+        $saving = Saving::find($transactionId);
+        $amount = $saving->amount;
 
-    public static function delete(): array
-    {
-        return [];
+        $balanceResponse = TransactionService::updateMoney(
+            $userId,
+            $amount,
+            __('messages.success.balance'),
+            'balance'
+        );
+
+        if (!$balanceResponse['status']) return $balanceResponse;
+
+        $saving->delete();
+
+        return TransactionService::updateMoney(
+            $userId,
+            -$amount,
+            __('messages.success.savings_deleted'),
+            self::TABLE_NAME
+        );
     }
 
     /**
