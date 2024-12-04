@@ -4,6 +4,7 @@ namespace App\Filament\Resources\UserResource\Widgets;
 
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Saving;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
@@ -19,14 +20,20 @@ class ActionsHistogramChart extends ChartWidget
                 [
                     'label' => 'Registered income',
                     'data' => Income::getIncomeHistogramData(),
-                    'backgroundColor' => ' #74fe00',
-                    'borderColor' => ' #74fe00',
+                    'backgroundColor' => '#72f205',
+                    'borderColor' => '#72f205',
                 ],
                 [
                     'label' => 'Registered expense',
                     'data' => Expense::getExpenseHistogramData(),
-                    'backgroundColor' => '#c61af8',
-                    'borderColor' => '#c61af8',
+                    'backgroundColor' => '#f9321a',
+                    'borderColor' => '#f9321a',
+                ],
+                [
+                    'label' => 'Registered savings',
+                    'data' => Saving::getSavingHistogramData(),
+                    'backgroundColor' => '#0CB7F2',
+                    'borderColor' => '#0CB7F2',
                 ]
             ],
             'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

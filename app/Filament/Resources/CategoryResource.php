@@ -66,7 +66,8 @@ class CategoryResource extends Resource
                     ->size(IconColumn\IconColumnSize::Medium),
                 ColorColumn::make('color'),
                 TextColumn::make('created_at')
-                    ->label('Created at'),
+                    ->label('Created at')
+                    ->icon('heroicon-o-calendar'),
             ])
             ->defaultSort('created_at', 'desc')
             ->filters([

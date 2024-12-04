@@ -17,6 +17,7 @@ class Expense extends Model
     use HistogramData;
     use StatisticalData;
 
+    const TABLE_NAME = 'expenses';
     const TYPE_ACTION = 'E';
     const TYPE_PROGRAMMED = 'P';
     const TYPE_REGULAR = 'R';
@@ -33,7 +34,7 @@ class Expense extends Model
 
     public static function getExpenseHistogramData(): array
     {
-        return self::getHistogramData('expenses');
+        return self::getHistogramData(self::TABLE_NAME);
     }
 
     public function user()

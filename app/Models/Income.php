@@ -17,6 +17,7 @@ class Income extends Model
     use HistogramData;
     use StatisticalData;
 
+    const TABLE_NAME = 'incomes';
     const TYPE_ACTION = 'I';
 
     protected $fillable = [
@@ -30,7 +31,7 @@ class Income extends Model
     # Todo: Create an entity in charge of generating statistical data
     public static function getIncomeHistogramData(): array
     {
-        return self::getHistogramData('incomes');
+        return self::getHistogramData(self::TABLE_NAME);
     }
 
     public function user()

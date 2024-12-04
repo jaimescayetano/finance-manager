@@ -26,8 +26,6 @@ class IncomeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-arrow-trending-up';
 
-    protected static ?string $navigationGroup = 'Configurations';
-
     public static function form(Form $form): Form
     {
         return $form
@@ -40,8 +38,7 @@ class IncomeResource extends Resource
                     ->columnSpan(2),
                 DateTimePicker::make('date')
                     ->default(now())
-                    ->required()
-                    ->readOnly(),
+                    ->required(),
                 Select::make('income_source_id')
                     ->label('Income source')
                     ->relationship(name: 'incomeSource', titleAttribute: 'title')

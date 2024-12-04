@@ -14,11 +14,16 @@ trait HistogramData
             return [];
         }
 
+        $dateColumn = 'date';
+        if (!Schema::hasColumn($table, $dateColumn)) {
+            $dateColumn = 'created_at';
+        }
+
         $data = DB::table($table)
-            ->selectRaw("DATE_FORMAT(date, '%m') AS month, SUM(amount) AS total")
-            ->whereRaw("date >= DATE_FORMAT(NOW(), '%Y-01-01')")
+            ->selectRaw("DATE_FORMAT($dateColumn, '%m') AS month, SUM(amount) AS total")
+            ->whereRaw("$dateColumn >= DATE_FORMAT(NOW(), '%Y-01-01')")
             ->where('user_id', '=', auth()->id())
-            ->groupByRaw("DATE_FORMAT(date, '%m')")
+            ->groupByRaw("DATE_FORMAT($dateColumn, '%m')")
             ->orderBy("month")
             ->get()
             ->toArray();

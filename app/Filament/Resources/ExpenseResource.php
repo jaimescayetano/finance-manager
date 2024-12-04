@@ -31,8 +31,6 @@ class ExpenseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-m-arrow-trending-down';
 
-    protected static ?string $navigationGroup = 'Configurations';
-
     public static function form(Form $form): Form
     {
         return $form

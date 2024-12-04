@@ -49,7 +49,7 @@ class IncomeSourceResource extends Resource
                     ->searchable(),
                 IconColumn::make('icon_svg')
                     ->label('Icon')
-                    ->icon(function(string $state) {
+                    ->icon(function (string $state) {
                         // Validate if icon exists
                         try {
                             svg($state);
@@ -61,8 +61,9 @@ class IncomeSourceResource extends Resource
                     ->color('success')
                     ->size(IconColumn\IconColumnSize::Medium),
                 TextColumn::make('created_at')
-                    ->label('Created at'),
-            ])
+                    ->label('Created at')
+                    ->icon('heroicon-o-calendar'),
+            ])->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
