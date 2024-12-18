@@ -21,7 +21,8 @@ class Saving extends Model
     protected $fillable = [
         'title',
         'amount',
-        'user_id'
+        'user_id',
+        'date'
     ];
 
     public static function getSavingHistogramData(): array

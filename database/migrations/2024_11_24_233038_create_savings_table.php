@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
             $table->decimal('amount', 10, 2);
+            $table->string('title')->nullable();
+            $table->date('date');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

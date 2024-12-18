@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\DateTimePicker;
 use Illuminate\Database\Eloquent\Collection;
 
 class SavingResource extends Resource
@@ -23,10 +24,14 @@ class SavingResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title'),
+                TextInput::make('title')
+                    ->columnSpan(2),
                 TextInput::make('amount')
                     ->numeric()
                     ->prefix('S/.')
+                    ->required(),
+                DateTimePicker::make('date')
+                    ->default(now())
                     ->required(),
             ]);
     }
@@ -40,10 +45,10 @@ class SavingResource extends Resource
                 TextColumn::make('amount')
                     ->prefix('S/.')
                     ->searchable(),
-                TextColumn::make('created_at')
+                TextColumn::make('date')
                     ->icon('heroicon-o-calendar'),
             ])
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('date', 'desc')
             ->filters([
                 //
             ])

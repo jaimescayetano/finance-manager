@@ -28,6 +28,13 @@ class SavingsService implements ITransaction
         $newBalance = $currentBalance - $amount;
         $newSavings = $currentSavings + $amount;
 
+        if ($newBalance < 0) {
+            return [
+                'success' => false,
+                'message' => __('messages.errors.insufficient_balance')
+            ];
+        }
+
         $saving = Saving::create($data);
         $user->update(['balance' => $newBalance, 'savings' => $newSavings]);
 
