@@ -3,21 +3,28 @@
 return [
     'errors' => [
         'user_not_found' => 'The user was not found.',
-        'invalid_input' => 'The input is invalid.',
+
+        'saving_not_found' => 'The specified savings record was not found.',
+
+        'invalid_input' => 'The provided input is invalid.',
+        'insufficient_balance' => 'The current balance is insufficient.',
     ],
     'success' => [
-        'income_saved' => 'Income successfully recorded.',
-        'income_updated' => 'Income record updated successfully.',
-        'income_deleted' => 'Income record deleted successfully.',
+        'user_found' => 'The user was found successfully.',
 
-        'expense_saved' => 'Expense successfully recorded.',
-        'expense_updated' => 'Expense record updated successfully.',
-        'expense_deleted' => 'Expense record deleted successfully.',
+        'income_saved' => 'The income record was saved successfully.',
+        'income_updated' => 'The income record was updated successfully.',
+        'income_deleted' => 'The income record was deleted successfully.',
 
-        'savings_saved' => 'Savings successfully recorded.',
-        'savings_updated' => 'Savings record updated successfully.',
-        'savings_deleted' => 'Savings record deleted successfully.',
+        'expense_saved' => 'The expense record was saved successfully.',
+        'expense_updated' => 'The expense record was updated successfully.',
+        'expense_deleted' => 'The expense record was deleted successfully.',
 
-        'balance_saved' => 'Balance successfully recorded.',
+        'savings_saved' => 'The savings record was saved successfully.',
+        'savings_found' => 'The savings record was found successfully.',
+        'savings_updated' => 'The savings record was updated successfully.',
+        'savings_deleted' => 'The savings record was deleted successfully.',
+
+        'balance_saved' => 'The balance was saved successfully.',
     ],
 ];
