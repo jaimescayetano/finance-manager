@@ -3,19 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SavingResource\Pages;
-use App\Filament\Resources\SavingResource\RelationManagers;
 use App\Models\Saving;
 use App\Services\Finance\SavingsService;
-use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SavingResource extends Resource
 {
@@ -30,6 +26,7 @@ class SavingResource extends Resource
                 TextInput::make('title'),
                 TextInput::make('amount')
                     ->numeric()
+                    ->prefix('S/.')
                     ->required(),
             ]);
     }
@@ -69,7 +66,7 @@ class SavingResource extends Resource
         foreach ($records as $record) {
             $savingId = $record->id;
             $response = SavingsService::delete($userId, $savingId);
-            send_notification($response['message'], $response['status'] ? 1 : 0);
+            send_notification($response['message'], $response['success'] ? 1 : 0);
         }
     }
 

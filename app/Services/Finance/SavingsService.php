@@ -15,52 +15,95 @@ class SavingsService implements ITransaction
         return [];
     }
 
-    public static function create(int $userId, float $amount): array
+    public static function create(int $userId, array $data): array
     {
-        $expenseResponse = User::applyExpense($amount);
-        if (!$expenseResponse['status']) return $expenseResponse;
+        $userValidation = self::checkUserExistence($userId);
+        if (!$userValidation['exists']) return ['success' => false, 'message' => $userValidation['message']];
 
-        return TransactionService::updateMoney(
-            $userId,
-            $amount,
-            __('messages.success.savings_updated'),
-            self::TABLE_NAME
-        );
+        $user = $userValidation['model'];
+
+        $currentBalance = $user->balance;
+        $currentSavings = $user->savings;
+        $amount = $data['amount'];
+        $newBalance = $currentBalance - $amount;
+        $newSavings = $currentSavings + $amount;
+
+        $saving = Saving::create($data);
+        $user->update(['balance' => $newBalance, 'savings' => $newSavings]);
+
+        return [
+            'success' => true,
+            'message' => __('messages.success.savings_saved'),
+            'model' => $saving
+        ];
     }
 
     public static function update(int $userId, int $transactionId, array $data): array
     {
-        return [];
+        $userValidation = self::checkUserExistence($userId);
+        if (!$userValidation['exists']) return ['success' => false, 'message' => $userValidation['message']];
+
+        $savingValidation = self::checkSavingExistence($transactionId, $userId);
+        if (!$savingValidation['exists']) return ['success' => false, 'message' => $savingValidation['message']];
+
+        $user = $userValidation['model'];
+        $saving = $savingValidation['model'];
+
+        $currentSaving = Saving::where('id', '=', $transactionId)
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        $currentAmount = $saving->amount;
+        $newAmount = $data['amount'];
+        $difference = $currentAmount - $newAmount;
+        $currentBalance = $user->balance;
+        $currentSavings = $user->savings;
+        $newBalance = $currentBalance + $difference;
+        $newSavings = $currentSavings - $difference;
+
+        if ($newBalance < 0) {
+            return [
+                'success' => false,
+                'message' => __('messages.errors.insufficient_balance')
+            ];
+        }
+
+        $user->update(['balance' => $newBalance, 'savings' => $newSavings]);
+        $currentSaving->update($data);
+
+        return [
+            'success' => true,
+            'message' => __('messages.success.savings_updated'),
+            'model' => $currentSaving
+        ];
     }
 
     public static function delete(int $userId, int $transactionId): array
     {
-        $saving = Saving::find($transactionId);
-        $amount = $saving->amount;
+        $userValidation = self::checkUserExistence($userId);
+        if (!$userValidation['exists']) return ['success' => false, 'message' => $userValidation['message']];
 
-        $balanceResponse = TransactionService::updateMoney(
-            $userId,
-            $amount,
-            __('messages.success.balance'),
-            'balance'
-        );
+        $savingValidation = self::checkSavingExistence($transactionId, $userId);
+        if (!$savingValidation['exists']) return ['success' => false, 'message' => $savingValidation['message']];
 
-        if (!$balanceResponse['status']) return $balanceResponse;
+        $user = $userValidation['model'];
+        $saving = $savingValidation['model'];
 
+        $amount = (float) $saving->amount;
+        $currentBalance = $user->balance;
+        $currentSavings = $user->savings;
+        $newBalance = $currentBalance + $amount;
+        $newSavings = $currentSavings - $amount;
+
+        $user->update(['balance' => $newBalance, 'savings' => $newSavings]);
         $saving->delete();
 
-        return TransactionService::updateMoney(
-            $userId,
-            -$amount,
-            __('messages.success.savings_deleted'),
-            self::TABLE_NAME
-        );
+        return [
+            'success' => true,
+            'message' => __('messages.success.savings_deleted')
+        ];
     }
 
-    /**
-     * Add up the amounts of all savings incurred so far
-     * @return float
-     */
     public static function getTotalAmount(int $userId): float
     {
         $totalAmount = Saving::selectRaw('SUM(amount) AS total_amount')
@@ -69,5 +112,28 @@ class SavingsService implements ITransaction
             ->total_amount;
 
         return (float) $totalAmount;
+    }
+
+    public static function checkSavingExistence(int $savingId, int $userId): array
+    {
+        $saving = Saving::where('id', '=', $savingId)
+            ->where('user_id', '=', $userId)
+            ->first();
+
+        return [
+            'exists' => $saving ? true : false,
+            'message' => $saving ? __('messages.success.savings_found') : __('messages.errors.saving_not_found'),
+            'model' => $saving ?? null
+        ];
+    }
+
+    public static function checkUserExistence(int $userId): array
+    {
+        $user = User::find($userId);
+        return [
+            'exists' => $user ? true : false,
+            'message' => $user ? __('messages.success.user_found') : __('messages.errors.user_not_found'),
+            'model' => $user ?? null
+        ];
     }
 }

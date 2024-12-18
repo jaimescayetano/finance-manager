@@ -19,7 +19,16 @@ class EditSaving extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $record->update($data);
-        return $record;
+        $userId = auth()->id();
+        $response = SavingsService::update($userId, $record->id, $data);
+
+        send_notification(
+            $response['message'],
+            $response['success'] ? 1 : 0
+        );
+
+        if (!$response['success'] || !isset($response['model'])) $this->halt();
+
+        return $response['model'];
     }
 }

@@ -28,17 +28,16 @@ class CreateSaving extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $userId = auth()->id();
-        $response = SavingsService::create($userId, $data['amount'] ?? 0);
+        $response = SavingsService::create($userId, $data);
     
         send_notification(
             $response['message'],
-            $response['status'] ? 1 : 0
+            $response['success'] ? 1 : 0
         );
 
-        if (!$response['status']) $this->halt();
+        if (!$response['success'] || !isset($response['model'])) $this->halt();
 
-        $expense = static::getModel()::create($data);
-        return $expense;
+        return $response['model'];
     }
 
     protected function getCreatedNotification(): ?Notification
