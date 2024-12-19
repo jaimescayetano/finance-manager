@@ -4,6 +4,7 @@ namespace App\Filament\Resources\IncomeResource\Pages;
 
 use App\Filament\Resources\IncomeResource;
 use App\Models\User;
+use App\Services\Finance\IncomeService;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -26,15 +27,17 @@ class CreateIncome extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $response = User::applyIncome($data['amount'] ?? 0);
-        $income = static::getModel()::create($data);
-
+        $userId = auth()->id();
+        $response = IncomeService::create($userId, $data);
+    
         send_notification(
             $response['message'],
-            $response['status'] ? 1 : 0
-        );     
+            $response['success'] ? 1 : 0
+        );
 
-        return $income;
+        if (!$response['success'] || !isset($response['model'])) $this->halt();
+
+        return $response['model'];
     }
 
     protected function getCreatedNotification(): ?Notification

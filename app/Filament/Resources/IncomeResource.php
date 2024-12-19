@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\IncomeResource\Pages;
 use App\Models\Income;
+use App\Services\Finance\IncomeService;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -14,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class IncomeResource extends Resource
 {
@@ -69,12 +71,24 @@ class IncomeResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->action(fn($record) => self::deleteRecords([$record])),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(fn($records) => self::deleteRecords($records)),
                 ]),
             ]);
+    }
+
+    public static function deleteRecords(array|Collection $records): void
+    {
+        $userId = auth()->id();
+        foreach ($records as $record) {
+            $savingId = $record->id;
+            $response = IncomeService::delete($userId, $savingId);
+            send_notification($response['message'], $response['success'] ? 1 : 0);
+        }
     }
 
     public static function getRelations(): array
